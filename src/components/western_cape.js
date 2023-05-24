@@ -3,7 +3,6 @@ export default function WesternCapeProvince(props) {
   const filteredProvince = props.municipalData.filter(province => {
       return province["municipality.province_name"] == 'Western Cape';
     });
-   console.log(filteredProvince);
 
     const westernCape = filteredProvince.map((item) => (
       <div key={item["municipality.name"]}>
@@ -13,7 +12,6 @@ export default function WesternCapeProvince(props) {
         </a>
       </div>
     ));
-    console.log(westernCape)
 
 return(
 <>

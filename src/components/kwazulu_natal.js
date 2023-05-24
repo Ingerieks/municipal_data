@@ -3,7 +3,6 @@ export default function KwazuluNatalProvince(props) {
     const filteredProvince = props.municipalData.filter(province => {
         return province["municipality.province_name"] == 'Kwazulu-Natal';
       });
-     console.log(filteredProvince);
   
       const KwazuluNatal = filteredProvince.map((item) => (
         <div key={item["municipality.name"]}>
@@ -13,7 +12,6 @@ export default function KwazuluNatalProvince(props) {
           </a>
         </div>
       ));
-      console.log(KwazuluNatal)
   
   return(
   <>

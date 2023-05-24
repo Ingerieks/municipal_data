@@ -3,7 +3,6 @@ export default function MpumalangaProvince(props) {
     const filteredProvince = props.municipalData.filter(province => {
         return province["municipality.province_name"] == 'Free State';
       });
-     console.log(filteredProvince);
   
       const mpumalanga = filteredProvince.map((item) => (
         <div key={item["municipality.name"]}>
@@ -13,7 +12,6 @@ export default function MpumalangaProvince(props) {
           </a>
         </div>
       ));
-      console.log(mpumalanga)
   
   return(
   <>

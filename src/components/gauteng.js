@@ -3,8 +3,9 @@ export default function GautengProvince(props) {
     const filteredProvince = props.municipalData.filter(province => {
         return province["municipality.province_name"] == 'Free State';
       });
-     console.log(filteredProvince);
-  
+
+      
+
       const gauteng = filteredProvince.map((item) => (
         <div key={item["municipality.name"]}>
           <a href={item["municipality.url"]}>
@@ -13,7 +14,6 @@ export default function GautengProvince(props) {
           </a>
         </div>
       ));
-      console.log(gauteng)
   
   return(
   <>

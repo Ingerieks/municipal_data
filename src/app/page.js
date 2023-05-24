@@ -12,49 +12,52 @@ import GautengProvince from "@/components/gauteng.js";
 import LimpopoProvince from "@/components/limpopo.js";
 import MpumalangaProvince from "@/components/mpumalanga.js";
 import NorthWestProvince from "@/components/north_west.js";
+import ProvinceSections from "@/components/sorted_by_province.js";
+
+let _ = require('lodash');
 
 export default function Home() {
   const [municipalData, setMunicipalData] = useState([]);
+  const [municipalAmount, setMunicipalAmount] = useState([]);
+  const [combinedData, setCombinedData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const url =
-      "https://municipaldata.treasury.gov.za/api/cubes/municipalities/members/municipality";
-    fetch(url, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((responseBody) => {
-        const municipalDataObject = responseBody.data;
-        setMunicipalData(municipalDataObject)
+    Promise.all([
+      fetch(
+        "https://municipaldata.treasury.gov.za/api/cubes/municipalities/members/municipality"
+      ),
+      fetch(
+        "https://municipaldata.treasury.gov.za/api/cubes/financial_position_v2/facts"
+      ),
+    ])
+      .then(([resNames, resAmounts]) =>
+        Promise.all([resNames.json(), resAmounts.json()])
+      )
+      .then(([dataNames, dataAmounts]) => {
+        const municipalDataObject = dataNames.data;
+        const municipalAmountObject = dataAmounts.data;
+        setMunicipalData(municipalDataObject);
+        setMunicipalAmount(municipalAmountObject);
         setLoading(false);
       });
   }, []);
 
-  const renderName = municipalData.map((item) => (
-    <div key={item["municipality.name"]} name={item["municipality.province_name"]}>
-      <a href={item["municipality.url"]}>
-        <div>{item["municipality.name"]}</div>
-        <div>{item["municipality.demarcation_code"]}</div>
-      </a>
-    </div>
-  ));
-  
+  const provinceGroups = _.groupBy(
+    municipalData,
+    (muni) => muni["municipality.province_name"]
+  );
 
   return (
     <main>
       <div>
         <div>{loading ? <>Loading..</> : <></>}</div>
-        <EasternCapeProvince municipalData={municipalData}  />
-        <FreestateProvince municipalData={municipalData}  />
-        <GautengProvince municipalData={municipalData}  />
-        <KwazuluNatalProvince municipalData={municipalData}  />
-        <LimpopoProvince municipalData={municipalData}  />
-        <MpumalangaProvince municipalData={municipalData}  />
-        <NorthernCapeProvince municipalData={municipalData}  />
-        <NorthWestProvince municipalData={municipalData}  />
-        <WesternCapeProvince municipalData={municipalData}  />
+        
+        <ProvinceSections provinceGroups={provinceGroups}
+        />
       </div>
     </main>
   );
 }
+
+//<div>{organisedByProvince}</div>
