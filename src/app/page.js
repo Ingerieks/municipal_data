@@ -1,20 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import { render } from "react-dom";
-import MunicipalDataList from "../components/municipal_data_list.js";
-//import SortedByProvince from "../components/sorted_by_province.js"
-import WesternCapeProvince from "@/components/western_cape.js";
-import EasternCapeProvince from "@/components/eastern_cape.js";
-import NorthernCapeProvince from "@/components/northern_cape.js";
-import FreestateProvince from "@/components/freestate.js";
-import KwazuluNatalProvince from "@/components/kwazulu_natal.js";
-import GautengProvince from "@/components/gauteng.js";
-import LimpopoProvince from "@/components/limpopo.js";
-import MpumalangaProvince from "@/components/mpumalanga.js";
-import NorthWestProvince from "@/components/north_west.js";
-import ProvinceSections from "@/components/sorted_by_province.js";
 
-let _ = require('lodash');
+import ProvinceSection from "@/components/sorted_by_province.js";
+
+let _ = require("lodash");
 
 export default function Home() {
   const [municipalData, setMunicipalData] = useState([]);
@@ -27,9 +17,7 @@ export default function Home() {
       fetch(
         "https://municipaldata.treasury.gov.za/api/cubes/municipalities/members/municipality"
       ),
-      fetch(
-        "https://municipaldata.treasury.gov.za/api/cubes/financial_position_v2/facts"
-      ),
+      fetch("https://municipaldata.treasury.gov.za/api/cubes/cflow_v2/facts"),
     ])
       .then(([resNames, resAmounts]) =>
         Promise.all([resNames.json(), resAmounts.json()])
@@ -48,16 +36,21 @@ export default function Home() {
     (muni) => muni["municipality.province_name"]
   );
 
+  console.log(provinceGroups);
+  
   return (
     <main>
       <div>
         <div>{loading ? <>Loading..</> : <></>}</div>
-        
-        <ProvinceSections provinceGroups={provinceGroups}
-        />
+        <div>
+          {Object.keys(provinceGroups).map((provinceName) => {
+          return <ProvinceSection
+              name={provinceName}
+              municipalities={provinceGroups[provinceName]}
+            />;
+          })}
+        </div>
       </div>
     </main>
   );
 }
-
-//<div>{organisedByProvince}</div>
