@@ -36,20 +36,51 @@ export default function Home() {
     (muni) => muni["municipality.province_name"]
   );
 
-  console.log(provinceGroups);
-  
+   
+  let auditedActualAmounts = municipalAmount.map((item) => {
+    return item;
+  }).filter(item => 
+   item["amount_type.label"] == "Audited Actual" &&
+   item["financial_year_end.year"] == 2021 &&
+   item["item.label"] == "Cash/cash equivalents at the year end:"
+    );
+   // const filtered_students = students.filter(item => item.marks > 90);
+
+  console.log(auditedActualAmounts);
+
+  /*let financialYearEnd = auditedActualAmounts.map((item) => {
+    return item;
+  }).filter(item => 
+   item["financial_year_end.year"] == 2021
+    );
+
+    console.log(financialYearEnd);*/
+
+
   return (
     <main>
       <div>
-        <div>{loading ? <>Loading..</> : <></>}</div>
+        <div>{loading ? <>Loading..</> : <>{console.log("save")}</>}</div>
         <div>
           {Object.keys(provinceGroups).map((provinceName) => {
-          return <ProvinceSection
-              name={provinceName}
-              municipalities={provinceGroups[provinceName]}
-            />;
+            return (
+              <ProvinceSection
+                key={provinceName}
+                name={provinceName}
+                municipalities={provinceGroups[provinceName]}
+              />
+            );
           })}
         </div>
+        <div>{auditedActualAmounts.map((provinceAmount) => {
+          return (
+            <>
+            <div className="font-bold">{provinceAmount["demarcation.label"]}</div>
+            <div>{provinceAmount["amount_type.label"]}</div>
+            <div>{provinceAmount["amount"]}</div>
+            </>
+          )
+        })}</div>
       </div>
     </main>
   );
